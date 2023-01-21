@@ -83,3 +83,37 @@ resource "aws_security_group" "ECS-Sec-Grp" {
     Name = "allow_tls"
   }
 }
+
+
+# sec group for db
+resource "aws_security_group" "db-sec-grp"{
+  name        = "db-sec-grp"
+  description = "Allow traffic from cluster"
+  vpc_id      = aws_vpc.finalpro.id
+
+  ingress {
+    description      = "Allow Https"
+    from_port        = 5432
+    to_port          = 5432
+    protocol         = "tcp"
+    security_groups = [aws_security_group.ECS-Sec-Grp.id]
+    
+
+  }
+
+
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    
+    /* ipv6_cidr_blocks = ["::/0"] */
+  }
+
+  tags = {
+    Name = "allow_tls"
+  }
+}
+
